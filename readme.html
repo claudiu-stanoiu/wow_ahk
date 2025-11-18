@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+head>
   <meta charset="UTF-8" />
   <title>WoW Key Repeat + Overlay System</title>
   <style>
@@ -23,7 +23,7 @@
       --radius-md: 10px;
       --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.45);
       --shadow-subtle: 0 0 0 1px rgba(148, 163, 184, 0.24);
-    } 
+    }
 
     * {
       box-sizing: border-box;
@@ -320,19 +320,124 @@
         <ul>
           <li><strong>Key Repeat Script (wow_key_repeat_with_log.ahk)</strong> &mdash; handles repeated key presses in World of Warcraft and logs when it is suspended or unsuspended.</li>
           <li><strong>Overlay Monitor Script (wow_key_repeat_script_monitor_overlay.ahk)</strong> &mdash; displays a minimal overlay on your second monitor showing whether the key script is currently <strong>Running (R)</strong> or <strong>Suspended (S)</strong>.</li>
+          <li><strong>AutoHotKeyInstaller (this version has been tested with these scripts)</strong> &mdash; script runner.</li>
         </ul>
         <p>
           The scripts communicate via a simple text log file, and the overlay persists its own settings (position and lock state) in a separate INI file.
         </p>
       </section>
 
+      <section id="usage">
+        <h2>2. How to Use</h2>
+
+        <h3>2.1 Setup</h3>
+        <ol>
+          <li>Place your <strong>Key Repeat Script</strong> (e.g. <code>key_repeat.ahk</code>) in a folder of your choice.</li>
+          <li>Place the <strong>Overlay Monitor Script</strong> (e.g. <code>wow_overlay.ahk</code>) in any folder (it uses <code>%AppData%</code> for settings).</li>
+          <li>Ensure AutoHotkey v1 is installed on your system.</li>
+        </ol>
+
+        <h3>2.2 Running manually</h3>
+        <ol>
+          <li>Run the <strong>Key Repeat Script</strong>.</li>
+          <li>Run the <strong>Overlay Monitor Script</strong>.</li>
+          <li>Launch <strong>World of Warcraft</strong>.</li>
+          <li>When WoW is active, the overlay will appear.</li>
+        </ol>
+
+        <h3>2.3 Start automatically with Task Scheduler (recommended)</h3>
+        <p>
+          To avoid odd behaviour at Windows startup and ensure the overlay initializes cleanly, you can launch it via **Task Scheduler** with a slight delay instead of the Startup folder.
+        </p>
+
+        <ol>
+          <li>Open <strong>Task Scheduler</strong> (press <kbd>Win</kbd>, type “Task Scheduler”).</li>
+          <li>In the right pane, click <strong>“Create Task…”</strong> (not “Basic Task”).</li>
+          <li>On the <strong>General</strong> tab:
+            <ul>
+              <li>Name: <code>WoW Overlay</code></li>
+              <li>Check <strong>“Run only when user is logged on”</strong>.</li>
+              <li>Optionally check <strong>“Run with highest privileges”</strong> (recommended if WoW is run as Administrator).</li>
+            </ul>
+          </li>
+          <li>On the <strong>Triggers</strong> tab:
+            <ul>
+              <li>Click <strong>“New…”</strong></li>
+              <li>Begin the task: <strong>“At log on”</strong></li>
+              <li>Check <strong>“Delay task for:”</strong> and choose <strong>10–30 seconds</strong> (e.g. 30s).</li>
+            </ul>
+          </li>
+          <li>On the <strong>Actions</strong> tab:
+            <ul>
+              <li>Click <strong>“New…”</strong></li>
+              <li>Action: <strong>“Start a program”</strong></li>
+              <li><strong>Program/script:</strong> Browse to your <code>AutoHotkey.exe (Usually C:\Program Files\AutoHotKey)</code></li>
+              <li><strong>Add arguments:</strong>
+                <br />
+                <code>"C:\Path\To\wow_overlay.ahk"</code>
+              </li>
+            </ul>
+          </li>
+          <li>Leave the <strong>Conditions</strong> and <strong>Settings</strong> tabs at their defaults (or tweak as you like).</li>
+          <li>Click <strong>OK</strong> to save.</li>
+        </ol>
+
+        <div class="callout info">
+          <div class="callout-icon">ℹ️</div>
+          <div class="callout-body">
+            After this, remove any <code>wow_overlay.ahk</code> shortcuts from the Startup folder.
+            The Task Scheduler entry will start the overlay for you after logon, with a small delay to
+            let your desktop, monitors and WoW settle, avoiding “overlay never showing” issues.
+          </div>
+        </div>
+
+        <h3>2.4 Position &amp; Lock Workflow</h3>
+        <ol>
+          <li>Make sure the overlay is <strong>unlocked</strong>:
+            <ul>
+              <li>Right-click the tray icon &rarr; <code>Toggle Lock Overlay</code> (ensure it is unchecked), or</li>
+              <li>If currently locked, toggle again to unlock.</li>
+            </ul>
+          </li>
+          <li><strong>Drag</strong> the overlay by clicking and dragging anywhere on it.</li>
+          <li><strong>Lock</strong> it in place:
+            <ul>
+              <li>Right-click the overlay, or</li>
+              <li>Right-click the tray icon &rarr; <code>Toggle Lock Overlay</code>.</li>
+            </ul>
+          </li>
+          <li>Once locked:
+            <ul>
+              <li>The overlay becomes semi-transparent (~60%).</li>
+              <li>It becomes click-through (does not block your WoW UI).</li>
+              <li>Its position and <code>Locked=1</code> status are saved.</li>
+            </ul>
+          </li>
+        </ol>
+
+        <h3>2.5 Exiting</h3>
+        <p>
+          To exit the overlay cleanly:
+        </p>
+        <ol>
+          <li>Right-click the tray icon.</li>
+          <li>Select <strong>Exit Overlay</strong>.</li>
+        </ol>
+        <p>This will:</p>
+        <ul>
+          <li>Save the current position to <code>overlay_settings.ini</code>.</li>
+          <li>Save the lock state (<code>Locked=0/1</code>).</li>
+          <li>Delete <code>suspend_log.txt</code>.</li>
+        </ul>
+      </section>
+
       <section id="key-repeat">
         <div class="section-header">
-          <h2>2. Key Repeat Script</h2>
+          <h2>3. Key Repeat Script</h2>
           <span class="tag">Component A</span>
         </div>
 
-        <h3>2.1 Purpose</h3>
+        <h3>3.1 Purpose</h3>
         <p>
           The Key Repeat Script is responsible for:
         </p>
@@ -342,7 +447,7 @@
           <li>Logging every suspend / unsuspend action to a text file.</li>
         </ul>
 
-        <h3>2.2 Log File</h3>
+        <h3>3.2 Log File</h3>
         <p>
           The script writes to a plain-text log file located <strong>in the same directory as the Key Repeat script</strong>:
         </p>
@@ -368,11 +473,11 @@
 
       <section id="overlay">
         <div class="section-header">
-          <h2>3. Overlay Monitor Script</h2>
+          <h2>4. Overlay Monitor Script</h2>
           <span class="tag">Component B</span>
         </div>
 
-        <h3>3.1 Purpose</h3>
+        <h3>4.1 Purpose</h3>
         <p>
           The Overlay Monitor Script provides a tiny on-screen indicator on your second monitor that shows the current state of the Key Repeat Script:
         </p>
@@ -381,7 +486,7 @@
           <li><strong>S</strong> (red) &mdash; script is <strong>Suspended</strong></li>
         </ul>
 
-        <h3>3.2 Display Rules</h3>
+        <h3>4.2 Display Rules</h3>
         <p>
           The overlay will only be visible when:
         </p>
@@ -402,7 +507,7 @@
           <li>Some other application is active <em>and</em> the overlay is not active.</li>
         </ul>
 
-        <h3>3.3 Behavior &amp; Features</h3>
+        <h3>4.3 Behavior &amp; Features</h3>
         <div class="two-col">
           <div>
             <ul>
@@ -433,7 +538,7 @@
               <li>Overlay shows on your second monitor (you can drag it anywhere).</li>
               <li>Overlay position is <strong>persisted</strong> between sessions.</li>
               <li>Lock/unlock state is also persisted between sessions.</li>
-              <li>Overlay only checks the log file while WoW is considered "visible" (per the rules above).</li>
+              <li>Overlay only checks the log file while WoW is considered "visible" by the rule above.</li>
               <li>On exit via tray:
                 <ul>
                   <li>Position and lock state are saved to the INI file.</li>
@@ -444,7 +549,7 @@
           </div>
         </div>
 
-        <h3>3.4 Locking &amp; Unlocking</h3>
+        <h3>4.4 Locking &amp; Unlocking</h3>
         <p>You can toggle the overlay lock state in two ways:</p>
         <ul>
           <li><strong>Right-click the overlay</strong> (when it is unlocked and receiving clicks).</li>
@@ -464,7 +569,7 @@
 
       <section id="settings">
         <div class="section-header">
-          <h2>4. Settings File</h2>
+          <h2>5. Settings File</h2>
           <span class="tag">Overlay configuration</span>
         </div>
 
@@ -482,7 +587,7 @@ Y=1307
 Locked=1
 </code></pre>
 
-        <h3>4.1 Fields</h3>
+        <h3>5.1 Fields</h3>
         <table>
           <thead>
             <tr>
@@ -505,7 +610,7 @@ Locked=1
           </tbody>
         </table>
 
-        <h3>4.2 When the INI is updated</h3>
+        <h3>5.2 When the INI is updated</h3>
         <ul>
           <li><strong>On lock:</strong>
             <ul>
@@ -529,9 +634,9 @@ Locked=1
       </section>
 
       <section id="interaction">
-        <h2>5. Interaction Between Scripts</h2>
+        <h2>6. Interaction Between Scripts</h2>
 
-        <h3>5.1 High-level flow</h3>
+        <h3>6.1 High-level flow</h3>
         <ol>
           <li>
             <strong>Key Repeat Script runs</strong><br />
@@ -571,64 +676,6 @@ Locked=1
             </ul>
           </li>
         </ol>
-      </section>
-
-      <section id="usage">
-        <h2>6. How to Use</h2>
-
-        <h3>6.1 Setup</h3>
-        <ol>
-          <li>Place your <strong>Key Repeat Script</strong> (e.g. <code>key_repeat.ahk</code>) in a folder of your choice.</li>
-          <li>Place the <strong>Overlay Monitor Script</strong> (e.g. <code>wow_overlay.ahk</code>) in any folder (it uses <code>%AppData%</code> for settings).</li>
-          <li>Ensure AutoHotkey v1 is installed on your system.</li>
-        </ol>
-
-        <h3>6.2 Running</h3>
-        <ol>
-          <li>Run the <strong>Key Repeat Script</strong>.</li>
-          <li>Run the <strong>Overlay Monitor Script</strong>.</li>
-          <li>Launch <strong>World of Warcraft</strong>.</li>
-          <li>When WoW is active, the overlay will appear on your screen.</li>
-        </ol>
-
-        <h3>6.3 Position &amp; Lock Workflow</h3>
-        <ol>
-          <li>Make sure the overlay is <strong>unlocked</strong>:
-            <ul>
-              <li>Right-click the tray icon &rarr; <code>Toggle Lock Overlay</code> (ensure it is unchecked), or</li>
-              <li>If currently locked, toggle again to unlock.</li>
-            </ul>
-          </li>
-          <li><strong>Drag</strong> the overlay by clicking and dragging anywhere on it.</li>
-          <li><strong>Lock</strong> it in place:
-            <ul>
-              <li>Right-click the overlay, or</li>
-              <li>Right-click the tray icon &rarr; <code>Toggle Lock Overlay</code>.</li>
-            </ul>
-          </li>
-          <li>Once locked:
-            <ul>
-              <li>The overlay becomes semi-transparent.</li>
-              <li>It becomes click-through (does not block your WoW UI).</li>
-              <li>Its position and <code>Locked=1</code> status are saved.</li>
-            </ul>
-          </li>
-        </ol>
-
-        <h3>6.4 Exiting</h3>
-        <p>
-          To exit the overlay cleanly:
-        </p>
-        <ol>
-          <li>Right-click the tray icon.</li>
-          <li>Select <strong>Exit Overlay</strong>.</li>
-        </ol>
-        <p>This will:</p>
-        <ul>
-          <li>Save the current position to <code>overlay_settings.ini</code>.</li>
-          <li>Save the lock state (<code>Locked=0/1</code>).</li>
-          <li>Delete <code>suspend_log.txt</code>.</li>
-        </ul>
       </section>
 
       <section id="files">

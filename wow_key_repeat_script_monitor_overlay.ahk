@@ -66,6 +66,8 @@ return
 
 ; --- ONLY SHOW OVERLAY WHEN EITHER WoW OR OVERLAY WINDOWS EXISTS AND IS NOT MINIMIZED ---
 CheckWoW:
+    ; Debug: see if this timer is actually firing
+    ;FileAppend, %A_Now% - CheckWoW ran`n, %A_ScriptDir%\overlay_debug.txt
     ; WoW window must exist at all
     wowID := WinExist("World of Warcraft")
     if (wowID)
