@@ -93,7 +93,7 @@ Overlay reads only the *last* line.
 ### Key repeat script folder
 ```
 <YourFolder>\
-    key_repeat.ahk
+    wow_key_repeat_with_log.ahk
     suspend_log.txt
 ```
 
@@ -114,7 +114,7 @@ Locked=1
 ### Overlay script folder
 ```
 <YourFolder>\
-    wow_overlay.ahk
+    wow_key_repeat_script_monitor_overlay.ahk
 ```
 
 ---
@@ -137,9 +137,7 @@ Locked=1
 # ⚙️ Performance
 
 - Both scripts consume **negligible CPU**  
+- Checks only happen when World of Warcraft is running
 - Overlay checks once per second  
 - No measurable impact on WoW performance  
 
----
-
-If you want, I can also generate a PDF, ZIP package, or add screenshots.
