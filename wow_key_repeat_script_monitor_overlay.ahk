@@ -29,8 +29,14 @@ else
     Locked := 0
 ; -------------------------------------------------------------
 
-; --- Tray menu (no default items, we define our own) ---
+; --- Tray menu (with default Reload Script) ---
 Menu, Tray, NoStandard
+; add our own "Reload Script" entry
+Menu, Tray, Add, Reload Script, DoReload
+; make that the default (double-click tray icon)
+Menu, Tray, Default, Reload Script
+; separator
+Menu, Tray, Add
 Menu, Tray, Add, Toggle Lock Overlay, ToggleLock
 Menu, Tray, Add, Exit Overlay, ExitOverlay
 ; -----------------------------------------------------
@@ -66,8 +72,6 @@ return
 
 ; --- ONLY SHOW OVERLAY WHEN EITHER WoW OR OVERLAY WINDOWS EXISTS AND IS NOT MINIMIZED ---
 CheckWoW:
-    ; Debug: see if this timer is actually firing
-    ;FileAppend, %A_Now% - CheckWoW ran`n, %A_ScriptDir%\overlay_debug.txt
     ; WoW window must exist at all
     wowID := WinExist("World of Warcraft")
     if (wowID)
@@ -252,6 +256,12 @@ ApplyLockVisuals:
         WinSet, Transparent, Off, ahk_id %hGui%
         WinSet, ExStyle, -0x20, ahk_id %hGui%
     }
+return
+
+
+; --- Tray: Reload script handler ---
+DoReload:
+    Reload
 return
 
 
